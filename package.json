@@ -1,0 +1,20 @@
+{
+  "name": "zod-to-d2",
+  "version": "1.0.0",
+  "description": "A library that extends Zod types and provides tools to convert schemas to D2 diagrams.",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest --run"
+  },
+  "keywords": [],
+  "author": "Carlos Gamez",
+  "license": "MIT",
+  "packageManager": "pnpm@10.13.1",
+  "peerDependencies": {
+    "zod": "^3.25.0 || ^4.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4",
+    "zod": "^3.25.0 || ^4.0.0"
+  }
+}

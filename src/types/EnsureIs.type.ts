@@ -1,0 +1,1 @@
+export type EnsureIs<T, U, ErrorMessage = "Error"> = T extends U ? U : ErrorMessage;
