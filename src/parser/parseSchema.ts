@@ -1,5 +1,5 @@
 import * as z4 from "zod/v4/core";
-import { createPrimitivePropertyType } from "../builder/createPropertyTypes";
+import { createArrayPropertyType, createEnumPropertyType, createLiteralPropertyType, createPrimitivePropertyType, createRecordPropertyType, createUnknownPropertyType } from "../builder/createPropertyTypes";
 import { PropertyRelationship, PropertyType } from "../types/Property.type";
 import { getObjectProperties } from "./getObjectProperties";
 
@@ -15,7 +15,7 @@ export function hasNotes<T extends z4.$ZodType>(schema: T) {
   return z4.globalRegistry.get(schema)?.notes !== undefined;
 }
 
-export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root'): PropertyType[] {
+export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root', isOptional = false, isNullable = false): PropertyType[] {
   const properties = new Array<PropertyType>();
   const relationships = new Array<PropertyRelationship>();
   const schema = _schema as z4.$ZodTypes;
@@ -26,9 +26,36 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
   const notes = hasNotes(schema) ? z4.globalRegistry.get(schema)?.notes as string[] ?? [] : [];
 
   switch (def.type) {
+    case "optional": {
+      const optionalSchema = schema as z4.$ZodOptional;
+      const innerType = optionalSchema._zod.def.innerType;
+      const innerProperties = parseSchema(innerType, propertyName, true, isNullable);
+      properties.push(...innerProperties);
+      break;
+    }
+
+    case "nullable": {
+      const nullableSchema = schema as z4.$ZodNullable;
+      const innerType = nullableSchema._zod.def.innerType;
+      const innerProperties = parseSchema(innerType, propertyName, isOptional, true);
+      properties.push(...innerProperties);
+      break;
+    }
+
     case "object": {
       const objectProperties = getObjectProperties(schema as z4.$ZodObject);
       properties.push(...objectProperties.flatMap((prop) => parseSchema(prop[1], `${propertyName}.${prop[0]}`)));
+      break;
+    }
+
+    case "record": {
+      const recordSchema = schema as z4.$ZodRecord;
+      const keyType = parseSchema(recordSchema._zod.def.keyType, 'key');
+      const valueType = parseSchema(recordSchema._zod.def.valueType, 'value');
+
+      properties.push(
+        createRecordPropertyType(propertyName, keyType[0], valueType[0], isOptional, isNullable, isPrimary, isForeign, relationships, [...notes])
+      );
       break;
     }
 
@@ -42,8 +69,8 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
             createPrimitivePropertyType(
               propertyName,
               'date',
-              false,
-              false,
+              isOptional,
+              isNullable,
               isPrimary,
               isForeign,
               relationships,
@@ -58,8 +85,8 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
             createPrimitivePropertyType(
               propertyName,
               'datetime',
-              false,
-              false,
+              isOptional,
+              isNullable,
               isPrimary,
               isForeign,
               relationships,
@@ -74,8 +101,8 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
             createPrimitivePropertyType(
               propertyName,
               'string',
-              false,
-              false,
+              isOptional,
+              isNullable,
               isPrimary,
               isForeign,
               relationships,
@@ -90,18 +117,50 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
       break;
     }
 
+    case "date": {
+      properties.push(
+        createPrimitivePropertyType(
+          propertyName,
+          'date',
+          isOptional,
+          isNullable,
+          isPrimary,
+          isForeign,
+          relationships,
+          [...notes]
+        )
+      );
+      break;
+    }
+
     case "number": {
       properties.push(
         createPrimitivePropertyType(
           propertyName,
           'number',
-          false,
-          false,
+          isOptional,
+          isNullable,
           isPrimary,
           isForeign,
           relationships,
           [...notes]
 
+        )
+      );
+      break;
+    }
+
+    case "bigint": {
+      properties.push(
+        createPrimitivePropertyType(
+          propertyName,
+          'bigint',
+          isOptional,
+          isNullable,
+          isPrimary,
+          isForeign,
+          relationships,
+          [...notes]
         )
       );
       break;
@@ -112,8 +171,69 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
         createPrimitivePropertyType(
           propertyName,
           'boolean',
-          false,
-          false,
+          isOptional,
+          isNullable,
+          isPrimary,
+          isForeign,
+          relationships,
+          [...notes]
+        )
+      );
+      break;
+    }
+
+    case "array": {
+      const arraySchema = schema as z4.$ZodArray;
+      const elementType = arraySchema._zod.def.element;
+      const elementProperties = parseSchema(elementType, `${propertyName}[]`);
+
+      properties.push(
+        createArrayPropertyType(
+          propertyName,
+          elementProperties[0],
+          isOptional,
+          isNullable,
+          isPrimary,
+          isForeign,
+          relationships,
+          [...notes]
+        )
+      );
+
+      break;
+    }
+
+    case "enum": {
+      const enumSchema = schema as z4.$ZodEnum;
+      const entries = enumSchema._zod.def.entries as Record<string, string>;
+
+      properties.push(
+        createEnumPropertyType(
+          propertyName,
+          entries,
+          isOptional,
+          isNullable,
+          isPrimary,
+          isForeign,
+          relationships,
+          [...notes]
+        )
+      );
+      break;
+    }
+
+    case "literal": {
+      const literalSchema = schema as z4.$ZodLiteral;
+      const literalValue = literalSchema._zod.def.values[0]?.valueOf();
+
+      console.log(literalValue);
+
+      properties.push(
+        createLiteralPropertyType(
+          propertyName,
+          literalValue,
+          isOptional,
+          isNullable,
           isPrimary,
           isForeign,
           relationships,
@@ -124,7 +244,17 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
     }
 
     default: {
-      // properties.push(createUnknownPropertyType(propertyName, schema._zod.def.type));
+      properties.push(
+        createUnknownPropertyType(
+          propertyName,
+          schema._zod.def.type,
+          isOptional,
+          isNullable,
+          isPrimary,
+          isForeign,
+          relationships,
+          [...notes]
+        ));
     }
   }
 
@@ -153,24 +283,7 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
   //       break;
   //     }
 
-  //     case 'ZodRecord': {
-  //       const keyType = inferSchema('key', schema._def.keyType);
-  //       const valueType = inferSchema('value', schema._def.valueType);
-
-  //       properties.push(
-  //         createRecordPropertyType(name, keyType[0], valueType[0])
-  //       );
-  //       break;
-  //     }
-
   //     case 'ZodNativeEnum': {
-  //       properties.push(
-  //         createEnumPropertyType(name, schema._def.values, false, false)
-  //       );
-  //       break;
-  //     }
-
-  //     case 'ZodEnum': {
   //       properties.push(
   //         createEnumPropertyType(name, schema._def.values, false, false)
   //       );
@@ -185,20 +298,6 @@ export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root')
   //       );
 
   //       properties.push(createUnionPropertyType(name, unionProperties));
-  //       break;
-  //     }
-
-  //     case 'ZodBoolean':
-  //       properties.push(createPrimitivePropertyType(name, 'boolean'));
-  //       break;
-
-  //     case 'ZodDate':
-  //       properties.push(createPrimitivePropertyType(name, 'datetime'));
-  //       break;
-
-  //     case 'ZodArray': {
-  //       const elementType = inferSchema(`elementOf_${name}`, schema._def.type);
-  //       properties.push(createArrayPropertyType(name, elementType[0]));
   //       break;
   //     }
 

@@ -19,6 +19,11 @@ export type StringProperty = BaseProperty & {
   type: 'string';
 };
 
+export type LiteralProperty = BaseProperty & {
+  type: 'literal';
+  value: string | number | boolean | undefined | Object;
+};
+
 export type DateTimeProperty = BaseProperty & {
   type: 'datetime';
 };
@@ -29,6 +34,10 @@ export type DateProperty = BaseProperty & {
 
 export type NumberProperty = BaseProperty & {
   type: 'number';
+};
+
+export type BigIntProperty = BaseProperty & {
+  type: 'bigint';
 };
 
 export type BooleanProperty = BaseProperty & {
@@ -69,9 +78,11 @@ export type UnknownType = BaseProperty & {
 
 export type PropertyType = OneOf<[
   StringProperty,
+  LiteralProperty,
   DateTimeProperty,
   DateProperty,
   NumberProperty,
+  BigIntProperty,
   BooleanProperty,
   ArrayProperty,
   ObjectProperty,
@@ -85,6 +96,10 @@ export type PropertyTypeName = Extract<PropertyType, { type: string }>['type'];
 
 export function isStringProperty(val: PropertyType): val is Extract<PropertyType, { type: 'string' }> {
   return val !== undefined && val.type === 'string';
+}
+
+export function isLiteralProperty(val: PropertyType): val is Extract<PropertyType, { type: 'literal' }> {
+  return val !== undefined && val.type === 'literal';
 }
 
 export function isDateTimeProperty(val: PropertyType): val is Extract<PropertyType, { type: 'datetime' }> {

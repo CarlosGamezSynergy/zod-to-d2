@@ -3,7 +3,7 @@ import { PropertyRelationship, PropertyType, PropertyTypeName } from "../types/P
 export function createPrimitivePropertyType<T extends PropertyType>(
   name: string,
   propertyType: Extract<
-    PropertyTypeName, 'string' | 'boolean' | 'number' | 'datetime' | 'date'
+    PropertyTypeName, 'string' | 'boolean' | 'number' | 'datetime' | 'date' | 'bigint'
   >,
   isOptional = false,
   isNullable = false,
@@ -22,6 +22,29 @@ export function createPrimitivePropertyType<T extends PropertyType>(
     relationships: relationships ?? [],
     notes: notes ?? [],
   } as T;
+}
+
+export function createLiteralPropertyType(
+  name: string,
+  value: string | number | boolean | undefined | Object,
+  isOptional = false,
+  isNullable = false,
+  isPrimaryKey = false,
+  isForeignKey = false,
+  relationships?: PropertyRelationship[],
+  notes?: string[]
+): PropertyType {
+  return {
+    name,
+    type: 'literal',
+    value,
+    isOptional,
+    isNullable,
+    isPrimaryKey,
+    isForeignKey,
+    relationships: relationships ?? [],
+    notes: notes ?? [],
+  } as PropertyType;
 }
 
 export function createArrayPropertyType(
