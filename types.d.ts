@@ -13,5 +13,9 @@ declare module "zod" {
       foreignSchema: TForeign,
       foreignProperty: MatchingKeys<TForeign, TThis>
     ): TThis;
+
+    primaryKey<TThis extends $ZodType>(this: TThis): TThis;
+
+    notes<TThis extends $ZodType>(this: TThis, ...notes: string[]): TThis;
   }
 }

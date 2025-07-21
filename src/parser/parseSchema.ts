@@ -1,24 +1,133 @@
 import * as z4 from "zod/v4/core";
+import { createPrimitivePropertyType } from "../builder/createPropertyTypes";
+import { PropertyRelationship, PropertyType } from "../types/Property.type";
 import { getObjectProperties } from "./getObjectProperties";
-import { PropertyType } from "./ZodSchemaParser";
 
-export function inferSchema(_schema: z4.$ZodType): PropertyType[] {
+export function isPrimaryKey<T extends z4.$ZodType>(schema: T) {
+  return z4.globalRegistry.get(schema)?.primaryKey !== undefined;
+}
+
+export function isForeignKey<T extends z4.$ZodType>(schema: T) {
+  return z4.globalRegistry.get(schema)?.foreignKey !== undefined;
+}
+
+export function hasNotes<T extends z4.$ZodType>(schema: T) {
+  return z4.globalRegistry.get(schema)?.notes !== undefined;
+}
+
+export function parseSchema(_schema: z4.$ZodType, propertyName: string = 'root'): PropertyType[] {
   const properties = new Array<PropertyType>();
+  const relationships = new Array<PropertyRelationship>();
   const schema = _schema as z4.$ZodTypes;
   const def = schema._zod.def;
+
+  const isPrimary = isPrimaryKey(schema);
+  const isForeign = isForeignKey(schema);
+  const notes = hasNotes(schema) ? z4.globalRegistry.get(schema)?.notes as string[] ?? [] : [];
 
   switch (def.type) {
     case "object": {
       const objectProperties = getObjectProperties(schema as z4.$ZodObject);
-      objectProperties.forEach((property) => inferSchema(property[1]));
+      properties.push(...objectProperties.flatMap((prop) => parseSchema(prop[1], `${propertyName}.${prop[0]}`)));
       break;
     }
+
+    case "string": {
+      const stringSchema = schema as z4.$ZodStringFormatTypes;
+      const stringFormat = stringSchema._zod.def.format;
+
+      switch (stringFormat) {
+        case "date": {
+          properties.push(
+            createPrimitivePropertyType(
+              propertyName,
+              'date',
+              false,
+              false,
+              isPrimary,
+              isForeign,
+              relationships,
+              [...notes]
+            )
+          );
+          break;
+        }
+
+        case "datetime": {
+          properties.push(
+            createPrimitivePropertyType(
+              propertyName,
+              'datetime',
+              false,
+              false,
+              isPrimary,
+              isForeign,
+              relationships,
+              [...notes]
+            )
+          );
+          break;
+        }
+
+        default: {
+          properties.push(
+            createPrimitivePropertyType(
+              propertyName,
+              'string',
+              false,
+              false,
+              isPrimary,
+              isForeign,
+              relationships,
+              [...notes]
+
+            )
+          );
+          break;
+        }
+      }
+
+      break;
+    }
+
+    case "number": {
+      properties.push(
+        createPrimitivePropertyType(
+          propertyName,
+          'number',
+          false,
+          false,
+          isPrimary,
+          isForeign,
+          relationships,
+          [...notes]
+
+        )
+      );
+      break;
+    }
+
+    case "boolean": {
+      properties.push(
+        createPrimitivePropertyType(
+          propertyName,
+          'boolean',
+          false,
+          false,
+          isPrimary,
+          isForeign,
+          relationships,
+          [...notes]
+        )
+      );
+      break;
+    }
+
     default: {
-      console.log(schema);
+      // properties.push(createUnknownPropertyType(propertyName, schema._zod.def.type));
     }
   }
 
-  // const relationships = new Array<PropertyRelationship>();
 
   // if (Object.prototype.hasOwnProperty.call(schema, '_def')) {
   //   if (schema.description) {
@@ -79,42 +188,6 @@ export function inferSchema(_schema: z4.$ZodType): PropertyType[] {
   //       break;
   //     }
 
-  //     case 'ZodString':
-  //       if (schema._def.checks &&
-  //         schema._def.checks.length > 0 &&
-  //         schema._def.checks
-  //           .map((c: ZodStringCheck) => c.kind)
-  //           .includes('datetime')) {
-  //         properties.push(createPrimitivePropertyType(name, 'datetime'));
-  //       } else if (schema._def.checks &&
-  //         schema._def.checks.length > 0 &&
-  //         schema._def.checks.map((c: ZodStringCheck) => c.kind).includes('date')) {
-  //         properties.push(createPrimitivePropertyType(name, 'date'));
-  //       } else {
-  //         properties.push(
-  //           createPrimitivePropertyType(
-  //             name,
-  //             'string',
-  //             false,
-  //             false,
-  //             relationships
-  //           )
-  //         );
-  //       }
-  //       break;
-
-  //     case 'ZodNumber':
-  //       properties.push(
-  //         createPrimitivePropertyType(
-  //           name,
-  //           'number',
-  //           false,
-  //           false,
-  //           relationships
-  //         )
-  //       );
-  //       break;
-
   //     case 'ZodBoolean':
   //       properties.push(createPrimitivePropertyType(name, 'boolean'));
   //       break;
@@ -157,10 +230,6 @@ export function inferSchema(_schema: z4.$ZodType): PropertyType[] {
   //       properties.push(...inferSchema(name, schema._def.innerType));
   //       break;
   //     }
-
-  //     default:
-  //       properties.push(createUnknownPropertyType(name, schema._def.typeName));
-  //   }
   // }
 
   return properties;

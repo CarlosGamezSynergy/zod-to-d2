@@ -1,12 +1,14 @@
-import "src/extensions/foreignKey";
-import { describe, expect, it } from "vitest";
+import "src/extensions";
+import { describe, it } from "vitest";
 import { z } from "zod";
 
 const parentSchema = z.object({
-  id: z.string(),
+  id: z.string().primaryKey(),
   name: z.string(),
   description: z.string().optional(),
 });
+
+export type ParentSchema = z.infer<typeof parentSchema>;
 
 export const childSchema = z.object({
   id: z.string(),

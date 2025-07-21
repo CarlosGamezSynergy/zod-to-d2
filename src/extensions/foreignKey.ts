@@ -6,7 +6,7 @@ z4.$ZodType.prototype.foreignKey = function foreignKey<
   TForeign extends z4.$ZodObject,
   TKey extends keyof TForeign["_zod"]["def"]["shape"]
 >(
-  this: z4.$ZodType & { meta: (meta: any) => TThis },
+  this: TThis,
   foreignSchema: TForeign,
   foreignProperty: TKey
 ) {
@@ -32,19 +32,36 @@ z4.$ZodType.prototype.foreignKey = function foreignKey<
     throw new Error(
       `Type mismatch: '${String(
         foreignProperty
-      )}' in foreign schema has type '${
-        foreignPropertySchema._zod.def.type || "unknown"
+      )}' in foreign schema has type '${foreignPropertySchema._zod.def.type || "unknown"
       }', but expected '${this._zod.def.type || "unknown"}'`
     );
   }
 
-  const result = this.meta({
-    foreignKey: {
-      type: "ZodForeignKey",
-      foreignSchema,
-      foreignProperty,
-    } as ZodForeignKeyDef<TForeign>,
-  });
+  const currentMetadata = z4.globalRegistry.get(this);
 
-  return result;
+  if (currentMetadata) {
+    if (currentMetadata.foreignKey) {
+      throw new Error(
+        `Foreign key '${String((currentMetadata.foreignKey as ZodForeignKeyDef).foreignProperty)}' already defined`
+      );
+    } else {
+      currentMetadata.foreignKey = {
+        type: "ZodForeignKey",
+        foreignSchema,
+        foreignProperty,
+      } as ZodForeignKeyDef<TForeign>;
+    }
+
+    z4.globalRegistry.add(this, currentMetadata);
+  } else {
+    z4.globalRegistry.add(this, {
+      foreignKey: {
+        type: "ZodForeignKey",
+        foreignSchema,
+        foreignProperty,
+      } as ZodForeignKeyDef<TForeign>,
+    });
+  }
+
+  return this;
 };
