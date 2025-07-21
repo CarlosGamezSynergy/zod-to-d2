@@ -1,7 +1,8 @@
 import "src/extensions";
 import { describe, it } from "vitest";
 import z from "zod";
-import { parseSchema } from "../src/parser/parseSchema";
+import { parseProperties } from "../src/parser/parseProperties";
+import { parseRelationships } from "../src/parser/parseRelationships";
 
 describe("Parsing Tests", () => {
   const parentSchema = z.object({
@@ -44,6 +45,7 @@ describe("Parsing Tests", () => {
   });
 
   it("should parse a simple expression", () => {
-    console.log(parseSchema(childSchema, 'childSchema'));
+    // console.log(parseProperties(childSchema, 'childSchema'));
+    console.log(parseRelationships(childSchema, 'childSchema'));
   });
 });

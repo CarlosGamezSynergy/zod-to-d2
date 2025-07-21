@@ -1,17 +1,11 @@
 import { OneOf } from "./OneOf.type";
 
-export type PropertyRelationship = {
-  foreignEntity: string;
-  foreignEntityPropertyChain: string[];
-};
-
 export type BaseProperty = {
   name: string;
   isOptional: boolean;
   isNullable: boolean;
   isPrimaryKey: boolean;
   isForeignKey: boolean;
-  relationships?: PropertyRelationship[];
   notes?: string[]
 };
 
@@ -67,7 +61,7 @@ export type EnumProperty = BaseProperty & {
 
 export type UnionProperty = BaseProperty & {
   type: 'union';
-  // properties: PropertyType[];
+  unionProps: PropertyType[];
 };
 
 export type UnknownType = BaseProperty & {
