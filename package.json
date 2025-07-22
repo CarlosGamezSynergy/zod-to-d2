@@ -3,9 +3,23 @@
   "version": "0.0.1",
   "description": "A library that extends Zod types and provides tools to convert schemas to D2 diagrams.",
   "main": "index.js",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest",
+    "dryRun": false,
+    "ignore": [
+      "node_modules",
+      "test",
+      "src",
+      "tsconfig.json",
+      "package.json",
+      ".gitignore"
+    ]
+  },
   "scripts": {
     "build": "tsc",
-    "publish": "pnpm build && pnpm pack && npm publish --access public",
+    "publish": "pnpm build && pnpm pack && npm publish",
     "test": "vitest --run"
   },
   "keywords": [],
