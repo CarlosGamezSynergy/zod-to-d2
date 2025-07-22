@@ -8,13 +8,9 @@
     "registry": "https://registry.npmjs.org/",
     "tag": "latest",
     "dryRun": false,
-    "ignore": [
-      "node_modules",
-      "test",
-      "src",
-      "tsconfig.json",
-      "package.json",
-      ".gitignore"
+    "files": [
+      "dist",
+      "README.md"
     ]
   },
   "scripts": {
