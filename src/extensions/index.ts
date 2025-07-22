@@ -1,3 +1,5 @@
 export * from "./foreignKey";
-export * from "./primaryKey";
 export * from "./notes";
+export * from "./primaryKey";
+export * from "./tableName";
+

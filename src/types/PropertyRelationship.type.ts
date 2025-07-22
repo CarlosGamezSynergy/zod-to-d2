@@ -1,5 +1,6 @@
 
 export type PropertyRelationship = {
+  localProperty: string;
   foreignEntity: string;
-  foreignEntityPropertyChain: string[];
+  foreignEntityProperty: string;
 };

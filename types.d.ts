@@ -3,6 +3,11 @@ import "./src/extensions/foreignKey";
 import { MatchingKeys } from "./src/types/MatchingKeys.type";
 
 declare module "zod" {
+
+  interface ZodObject {
+    tableName(name: string): this;
+  }
+
   interface ZodType {
     foreignKey<
       TThis extends $ZodType,
