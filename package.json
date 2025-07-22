@@ -4,6 +4,8 @@
   "description": "A library that extends Zod types and provides tools to convert schemas to D2 diagrams.",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "publish": "pnpm build && pnpm pack && npm publish --dry-run --access public",
     "test": "vitest --run"
   },
   "keywords": [],
