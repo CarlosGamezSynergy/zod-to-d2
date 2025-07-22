@@ -7,12 +7,12 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/",
     "tag": "latest",
-    "dryRun": false,
-    "files": [
-      "dist",
-      "README.md"
-    ]
+    "dryRun": true
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "publish": "pnpm build && pnpm pack && npm publish",
