@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import '../src/extensions';
+import "../src/extensions";
 
 export const PARENT_ONE_TABLE_NAME = "parent_one_table";
 export const PARENT_ONE_NAME_NOTES = "This is the parent one name";
@@ -32,7 +32,7 @@ export const parentTwoSchema = z.object({
     description: z.string().optional(),
 }).tableName(PARENT_TWO_TABLE_NAME);
 
-export const schemaWithoutParentName = z.object({
+export const schemaWithoutTableName = z.object({
     id: z.string().primaryKey(),
     parentOneId: z.string().foreignKey(parentOneSchema, "id"),
     name: z.string(),

@@ -1,9 +1,7 @@
 import { $ZodObject, $ZodType } from "zod/v4/core";
-import "./src/extensions/foreignKey";
 import { MatchingKeys } from "./src/types/MatchingKeys.type";
 
 declare module "zod" {
-
   interface ZodObject {
     tableName(name: string): this;
   }
@@ -11,8 +9,7 @@ declare module "zod" {
   interface ZodType {
     foreignKey<
       TThis extends $ZodType,
-      TForeign extends $ZodObject,
-      TKey extends keyof TForeign["_zod"]["def"]["shape"]
+      TForeign extends $ZodObject
     >(
       this: TThis,
       foreignSchema: TForeign,

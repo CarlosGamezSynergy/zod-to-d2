@@ -1,16 +1,23 @@
 import { PropertyType } from "../types/Property.type";
 import { buildColumn } from "./buildColumn";
+import { buildTextFile } from "./buildTextFile";
 
-export function buildTable(tableName: string, properties: PropertyType[]) {
-    let table =
-        `${tableName}: {
-    shape: sql_table
-    `;
+export function buildTable(properties: PropertyType[], tableName: string,) {
+    let table = "";
 
-    table += properties.map((property) => buildColumn(property)).join("\n    ");
+    table += buildTextFile([
+        `${tableName}: {`,
+    ])
 
-    table += `
-}`;
+    table += buildTextFile([
+        `shape: sql_table`,
+    ], 1);
+
+    table += buildTextFile(properties.map((property) => buildColumn(property)), 1);
+
+    table += buildTextFile([
+        `}`,
+    ]);
 
     return table;
 }

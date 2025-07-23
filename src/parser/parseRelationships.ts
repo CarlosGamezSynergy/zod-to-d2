@@ -12,8 +12,16 @@ export function parseRelationships(_schema: z4.$ZodType, propertyName: string = 
 
     switch (def.type) {
         case "object": {
+            let tableName = "unknown_table";
+
+            if (propertyName !== 'root') {
+                tableName = z4.globalRegistry.get(schema)?.tableName as string;
+                if (!tableName) {
+                    tableName = propertyName;
+                }
+            }
+
             const objectProperties = getObjectProperties(schema as z4.$ZodObject);
-            const tableName = propertyName !== 'root' ? propertyName : z4.globalRegistry.get(schema)?.tableName || 'unknown_table';
             relationships.push(...objectProperties.flatMap((prop) => parseRelationships(prop[1], `${tableName}.${prop[0]}`)));
             break;
         }
@@ -22,12 +30,14 @@ export function parseRelationships(_schema: z4.$ZodType, propertyName: string = 
             if (isForeign) {
                 const foreignKey = z4.globalRegistry.get(schema)?.foreignKey as ZodForeignKeyDef;
                 const foreignEntity = z4.globalRegistry.get(foreignKey.foreignSchema)?.tableName;
+
                 relationships.push({
                     localProperty: propertyName,
                     foreignEntity: foreignEntity || "unknown_table",
                     foreignEntityProperty: foreignKey.foreignProperty,
                 } as PropertyRelationship);
             }
+            break;
         }
     }
 

@@ -38,7 +38,15 @@ export function parseProperties(_schema: z4.$ZodType, propertyName: string = 'ro
     }
 
     case "object": {
-      const tableName = propertyName !== 'root' ? propertyName : z4.globalRegistry.get(schema)?.tableName || 'unknown_table';
+      let tableName = "unknown_table";
+
+      if (propertyName !== 'root') {
+        tableName = z4.globalRegistry.get(schema)?.tableName as string;
+        if (!tableName) {
+          tableName = propertyName;
+        }
+      }
+
       const objectProperties = getObjectProperties(schema as z4.$ZodObject);
       properties.push(...objectProperties.flatMap((prop) => parseProperties(prop[1], `${tableName}.${prop[0]}`)));
       break;
@@ -238,6 +246,7 @@ export function parseProperties(_schema: z4.$ZodType, propertyName: string = 'ro
           isForeign,
           [...notes]
         ));
+      break;
     }
   }
 

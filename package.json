@@ -3,12 +3,6 @@
   "version": "0.0.1",
   "description": "A library that extends Zod types and provides tools to convert schemas to D2 diagrams.",
   "main": "index.js",
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/",
-    "tag": "latest",
-    "dryRun": true
-  },
   "files": [
     "dist",
     "README.md"
@@ -26,7 +20,11 @@
     "zod": "^3.25.0 || ^4.0.0"
   },
   "devDependencies": {
+    "@types/node": "^24.1.0",
     "vitest": "^3.2.4",
     "zod": "^3.25.0 || ^4.0.0"
+  },
+  "dependencies": {
+    "bundle-require": "^5.1.0"
   }
 }

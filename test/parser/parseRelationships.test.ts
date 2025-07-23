@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parseRelationships } from "../src/parser/parseRelationships";
-import { childSchema } from "./schema.fixtures";
+import { parseRelationships } from "../../src/parser/parseRelationships";
+import { childSchema } from "../schema.fixtures";
 
 describe("Relationships Parsing Tests", () => {
     describe("Basic Relationships Parsing", () => {

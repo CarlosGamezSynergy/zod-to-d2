@@ -1,10 +1,10 @@
 import { describe, it } from "vitest";
-import { buildDiagram } from "../src/builder/buildDiagram";
-import { buildRelationship } from "../src/builder/buildRelationship";
-import { buildTable } from "../src/builder/buildTable";
-import { parseProperties } from "../src/parser/parseProperties";
-import { parseRelationships } from "../src/parser/parseRelationships";
-import { CHILD_TABLE_NAME, childSchema, PARENT_ONE_TABLE_NAME, PARENT_TWO_TABLE_NAME, parentOneSchema, parentTwoSchema } from "./schema.fixtures";
+import { buildDiagram } from "../../src/builder/buildDiagram";
+import { buildRelationship } from "../../src/builder/buildRelationship";
+import { buildTable } from "../../src/builder/buildTable";
+import { parseProperties } from "../../src/parser/parseProperties";
+import { parseRelationships } from "../../src/parser/parseRelationships";
+import { CHILD_TABLE_NAME, childSchema, PARENT_ONE_TABLE_NAME, PARENT_TWO_TABLE_NAME, parentOneSchema, parentTwoSchema } from "../schema.fixtures";
 
 describe("Building Tests", () => {
     it("should parse a simple expression", () => {

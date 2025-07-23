@@ -1,12 +1,23 @@
 import { PropertyRelationship } from "../types/PropertyRelationship.type";
+import { buildTextFile } from "./buildTextFile";
 
 export function buildRelationship(relationship: PropertyRelationship) {
     const { localProperty, foreignEntity, foreignEntityProperty } = relationship;
 
-    return `
-    ${localProperty} <-> ${foreignEntity}.${foreignEntityProperty}: {
-        source-arrowhead: {shape: cf-many}
-        target-arrowhead: {shape: cf-one-required}
-    }
-`;
+    let output = "";
+
+    output += buildTextFile([
+        `${localProperty} <-> ${foreignEntity}.${foreignEntityProperty}: {`,
+    ])
+
+    output += buildTextFile([
+        'source-arrowhead: {shape: cf-many}',
+        'target-arrowhead: {shape: cf-one-required}',
+    ], 1);
+
+    output += buildTextFile([
+        '}',
+    ]);
+
+    return output;
 }

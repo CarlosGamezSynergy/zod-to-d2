@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { parseProperties } from "../src/parser/parseProperties";
-import { parentOneSchema, schemaWithoutParentName } from "./schema.fixtures";
+import { parseProperties } from "../../src/parser/parseProperties";
+import { parentOneSchema, schemaWithoutParentName } from "../schema.fixtures";
 
 describe("Parsing Tests", () => {
   describe("Basic Parsing", () => {

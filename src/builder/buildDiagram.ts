@@ -1,7 +1,13 @@
+import { buildTextFile } from "./buildTextFile";
+
 export function buildDiagram(title: string, diagramElements: string[]) {
-    return `
-    direction: down
-    title: |md ${title} | { near: top-center }
-    ${diagramElements.join("\n    ")}
-`;
+    let diagram = "";
+
+    diagram += buildTextFile([
+        'direction: down',
+        'title: |md ${title} | { near: top-center }',
+        ...diagramElements
+    ]);
+
+    return diagram;
 }
