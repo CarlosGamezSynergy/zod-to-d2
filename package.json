@@ -1,0 +1,56 @@
+{
+  "name": "@eng-tools/zod-to-d2",
+  "version": "0.0.1",
+  "description": "A library that extends Zod types and provides tools to convert schemas to D2 diagrams.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EngineersTools/zod-to-d2"
+  },
+  "private": false,
+  "main": "dist/index.js",
+  "bin": {
+    "zod2d2": "dist/cli/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc && copyfiles -u 1 src/**/*.d.ts dist",
+    "prepublishOnly": "pnpm build",
+    "test": "vitest --run"
+  },
+  "keywords": [
+    "zod",
+    "d2",
+    "erd",
+    "diagram",
+    "codegen",
+    "typescript"
+  ],
+  "author": "Carlos Gamez (@EngineersTools)",
+  "license": "MIT",
+  "packageManager": "pnpm@10.13.1",
+  "peerDependencies": {
+    "zod": "^3.25.0 || ^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "copyfiles": "^2.4.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4",
+    "zod": "^3.25.0 || ^4.0.0"
+  },
+  "dependencies": {
+    "bundle-require": "^5.1.0",
+    "commander": "^14.0.0"
+  }
+}
