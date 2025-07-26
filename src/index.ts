@@ -6,6 +6,4 @@ export * from "./extensions";
 export * from "./loader";
 export * from "./parser";
 export * from "./types";
-export * from "./types/types.d";
 export * from "./utils";
-
