@@ -57,9 +57,9 @@ const diagram = generateDiagramText([userSchema, postSchema]);
 console.log(diagram); // D2 diagram source
 ```
 
-This outputs the following text:
+This outputs the following D2 text:
 
-```txt
+```d2
 direction: down
 title: |md Sample Diagram | {near: top-center}
 users: {
