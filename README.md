@@ -25,31 +25,66 @@ yarn add @eng-tools/zod-to-d2
 
 1. **Annotate your Zod schemas**
 
+[Sample schemas here](./test//sample.schemas.ts)
+
 ```ts
 import { z } from "zod";
 import "@eng-tools/zod-to-d2";
 
-const userSchema = z.object({
-  id: z.string().primaryKey(), //<-- marks the 'id' property as a PK
-  name: z.string().note("The name of the user"), //<-- includes comments on this property on the output diagram
-  email: z.string(),
-});
+export const userSchema = z
+  .object({
+    id: z.string().primaryKey(), //<-- marks the 'id' property as a PK
+    name: z.string().notes("The name of the user"), //<-- includes comments on this property on the output diagram
+    email: z.string(),
+  })
+  .tableName("users"); //<-- give the table/entity a name
 
-const postSchema = z.object({
-  id: z.string().primaryKey(),
-  authorId: z.string().foreignKey(userSchema, "id"), //<- creates a FK relationship to the 'id' property of the 'userSchema'
-  content: z.string(),
-});
+export const postSchema = z
+  .object({
+    id: z.string().primaryKey(),
+    authorId: z.string().foreignKey(userSchema, "id"), //<- creates a FK relationship to the 'id' property of the 'userSchema'
+    content: z.string(),
+  })
+  .tableName("posts"); //<-- give the table/entity a name
 ```
 
 2. **Generate a D2 diagram (programmatic API)**
 
 ```ts
-import { buildDiagram } from "@eng-tools/zod-to-d2";
+import { generateDiagramText } from "@eng-tools/zod-to-d2";
 
 const diagram = generateDiagramText([userSchema, postSchema]);
 console.log(diagram); // D2 diagram source
 ```
+
+This outputs the following text:
+
+```txt
+direction: down
+title: |md Sample Diagram | {near: top-center}
+users: {
+  shape: sql_table
+  "id": string {constraint: [primary_key]}
+  "name": string # The name of the user
+  "email": string
+}
+
+posts: {
+  shape: sql_table
+  "id": string {constraint: [primary_key]}
+  "authorId": string {constraint: [foreign_key]}
+  "content": string
+}
+
+posts.authorId <-> users.id: {
+  source-arrowhead: {shape: cf-many}
+  target-arrowhead: {shape: cf-one-required}
+}
+```
+
+You can find how this looks on the [D2 Playground here](https://play.d2lang.com/?script=tI_BTsNADETv-xVWOacfsEKcuHCGG0KV2XUTi6ydeh1VVZp_R0GlEap6ZI878zwzmY2Ss0qErEcJzt5ThHPJ8Ipl6AmeGVvDAmeYQAgtguvQJBIngzmMlaxGmAJcXu1woAj10O8cP3u6ChvOmwjVjaWFKalUN2TxCO8wGBe00-6LTvAxr4hgoRV6gLeOYPkD3YN3BEv66qaC3F_tYQ5h0Or_1w5H79Re7oN7NeJWbsCk4iR-W3X7exIem6efdXXL-c8AHS1Rg2Z67AgX7bIp7ZuCclpjHK0lv2NVocboMLJRnsMcvgMAAP__&layout=elk&), or as shown in the image below.
+
+!![Sample Diagram](./docs/images/Sample_Diagram.png)
 
 3. **Generate a D2 diagram (CLI)**
 
