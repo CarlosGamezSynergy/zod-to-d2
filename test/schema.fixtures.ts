@@ -1,5 +1,5 @@
 import { z } from "zod";
-import "../src/types/types.d.ts";
+import "../types.js";
 
 export const PARENT_ONE_TABLE_NAME = "parent_one_table";
 export const PARENT_ONE_NAME_NOTES = "This is the parent one name";

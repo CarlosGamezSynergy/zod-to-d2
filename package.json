@@ -13,7 +13,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "types.d.ts"
   ],
   "types": "./dist/index.d.ts",
   "exports": {
@@ -24,7 +25,7 @@
     }
   },
   "scripts": {
-    "build": "tsc && copyfiles -u 1 src/**/*.d.ts dist",
+    "build": "tsc",
     "prepublishOnly": "pnpm build",
     "test": "vitest --run"
   },

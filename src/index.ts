@@ -1,4 +1,4 @@
-/// <reference types="./types/types.d.ts" />
+/// <reference types="../types.d.ts" />
 
 export * from "./builder";
 export * from "./cli";
