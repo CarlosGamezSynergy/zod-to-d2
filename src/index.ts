@@ -24,7 +24,7 @@ declare module "zod" {
 }
 
 export * from "./builder";
-export * from "./cli";
+// export * from "./cli";
 export * from "./extensions";
 export * from "./loader";
 export * from "./parser";
