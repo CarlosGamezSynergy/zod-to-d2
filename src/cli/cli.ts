@@ -38,7 +38,7 @@ program.action(async (options) => {
     console.error(
       "Error: You must specify either --directory OR --file-paths, but not both."
     );
-    process.exit(1);
+    program.help();
   }
 
   let config = {

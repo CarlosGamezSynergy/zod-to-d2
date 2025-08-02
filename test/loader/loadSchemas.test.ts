@@ -5,6 +5,7 @@ import { LoadedZodSchema } from "../../src/types/LoadedZodSchema.type";
 describe("loadSchemas", () => {
     it("should load Zod schemas from a valid filePath", async () => {
         const loadedSchemas = await loadZodSchemas("./test/schema.fixtures.ts")
+        console.log(loadedSchemas);
         const allSuccess = loadedSchemas.every(schema => schema.type === "LoadedZodSchemaSuccess");
         expect(allSuccess).toBe(true);
         expect(loadedSchemas).toBeDefined();

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import "../src/types/types.d.ts";
+import "../src";
 
 /**
  * These schemas are used to demonstrate the functionality of zod-to-d2.
