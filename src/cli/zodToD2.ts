@@ -58,10 +58,12 @@ export async function zodToD2(config: ZodToD2Config): Promise<void> {
 
   successfulSchemas.forEach((s) => {
     console.log(`Processing schema: ${s.key || "Unnamed Schema"}...`);
+    
     const tableName =
       (globalRegistry.get(s.schema as $ZodObject)?.tableName as string) ||
       s.key ||
       "unknown_table";
+
     const properties = parseProperties(s.schema as $ZodType, tableName);
     const relationships = parseRelationships(s.schema as $ZodType, tableName);
 
