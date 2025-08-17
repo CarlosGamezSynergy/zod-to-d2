@@ -1,4 +1,4 @@
-import { buildTextFile } from "./buildTextFile";
+import { buildTextFile } from "./buildTextFile.js";
 
 export function buildDiagram(title: string, diagramElements: string[]) {
   let diagram = "";

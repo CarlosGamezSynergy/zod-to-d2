@@ -1,9 +1,17 @@
 import { $ZodObject, $ZodType, globalRegistry } from "zod/v4/core";
-import { buildDiagram, buildRelationship, buildTable } from "../builder";
-import { loadZodSchemas, scanDirectory } from "../loader";
-import { parseProperties, parseRelationships } from "../parser";
-import { isLoadedZodSchemaSuccess, ZodToD2Config } from "../types";
-import { saveToFile } from "./saveToFile";
+import { buildDiagram } from "../builder/buildDiagram.js";
+import { buildRelationship } from "../builder/buildRelationship.js";
+import { buildTable } from "../builder/buildTable.js";
+import { loadZodSchemas } from "../loader/loadZodSchemas.js";
+import { scanDirectory } from "../loader/scanDirectory.js";
+import { parseProperties } from "../parser/parseProperties.js";
+import { parseRelationships } from "../parser/parseRelationships.js";
+import {
+  isLoadedZodSchemaError,
+  isLoadedZodSchemaSuccess,
+} from "../types/LoadedZodSchema.type.js";
+import { type ZodToD2Config } from "../types/ZodToD2Config.type.js";
+import { saveToFile } from "./saveToFile.js";
 
 export async function zodToD2(config: ZodToD2Config): Promise<void> {
   let filePaths: string[] = [];
@@ -33,6 +41,18 @@ export async function zodToD2(config: ZodToD2Config): Promise<void> {
   const successfulSchemas = loadedSchemas
     .flat()
     .filter(isLoadedZodSchemaSuccess);
+
+  const errorSchemas = loadedSchemas.flat().filter(isLoadedZodSchemaError);
+
+  console.log(
+    `${errorSchemas.length} errors encountered while loading schemas:`
+  );
+  errorSchemas.forEach((errorSchema) => {
+    console.error(
+      `Error in file ${errorSchema.filePath}: ${errorSchema.errorMessage}`
+    );
+    console.error(`Error details: ${errorSchema.error.message}`);
+  });
 
   const diagramElements = new Array<string>();
 

@@ -1,15 +1,11 @@
 import * as z4 from "zod/v4/core";
-import { ZodForeignKeyDef } from "../types/ZodForeignKeyDef";
+import { ZodForeignKeyDef } from "../types/ZodForeignKeyDef.js";
 
-z4.$ZodType.prototype.foreignKey = function foreignKey<
+export function foreignKey<
   TThis extends z4.$ZodType,
   TForeign extends z4.$ZodObject,
   TKey extends keyof TForeign["_zod"]["def"]["shape"]
->(
-  this: TThis,
-  foreignSchema: TForeign,
-  foreignProperty: TKey
-) {
+>(this: TThis, foreignSchema: TForeign, foreignProperty: TKey) {
   const foreignPropertySchema =
     foreignSchema._zod.def.shape[foreignProperty as string];
 
@@ -32,7 +28,8 @@ z4.$ZodType.prototype.foreignKey = function foreignKey<
     throw new Error(
       `Type mismatch: '${String(
         foreignProperty
-      )}' in foreign schema has type '${foreignPropertySchema._zod.def.type || "unknown"
+      )}' in foreign schema has type '${
+        foreignPropertySchema._zod.def.type || "unknown"
       }', but expected '${this._zod.def.type || "unknown"}'`
     );
   }
@@ -42,7 +39,9 @@ z4.$ZodType.prototype.foreignKey = function foreignKey<
   if (currentMetadata) {
     if (currentMetadata.foreignKey) {
       throw new Error(
-        `Foreign key '${String((currentMetadata.foreignKey as ZodForeignKeyDef).foreignProperty)}' already defined`
+        `Foreign key '${String(
+          (currentMetadata.foreignKey as ZodForeignKeyDef).foreignProperty
+        )}' already defined`
       );
     } else {
       currentMetadata.foreignKey = {
@@ -64,4 +63,4 @@ z4.$ZodType.prototype.foreignKey = function foreignKey<
   }
 
   return this;
-};
+}

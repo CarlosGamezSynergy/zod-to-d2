@@ -1,6 +1,6 @@
 import * as z4 from "zod/v4/core";
 
-z4.$ZodObject.prototype.tableName = function tableName<T extends z4.$ZodObject>(this: T, name: string): T {
+export function tableName<T extends z4.$ZodObject>(this: T, name: string): T {
     const currentMetadata = z4.globalRegistry.get(this);
 
     if (currentMetadata) {

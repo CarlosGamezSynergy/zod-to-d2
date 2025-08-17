@@ -1,15 +1,15 @@
 import * as z4 from "zod/v4/core";
-import { PropertyType } from "../types/Property.type";
-import { createArrayPropertyType } from "./createArrayPropertyType";
-import { createEnumPropertyType } from "./createEnumPropertyType";
-import { createLiteralPropertyType } from "./createLiteralPropertyType";
-import { createPrimitivePropertyType } from "./createPrimitivePropertyType";
-import { createRecordPropertyType } from "./createRecordPropertyType";
-import { createUnknownPropertyType } from "./createUnknownPropertyType";
-import { getObjectProperties } from "./getObjectProperties";
-import { hasNotes } from "./hasNotes";
-import { isForeignKey } from "./isForeignKey";
-import { isPrimaryKey } from "./isPrimaryKey";
+import { type PropertyType } from "../types/Property.type.js";
+import { createArrayPropertyType } from "./createArrayPropertyType.js";
+import { createEnumPropertyType } from "./createEnumPropertyType.js";
+import { createLiteralPropertyType } from "./createLiteralPropertyType.js";
+import { createPrimitivePropertyType } from "./createPrimitivePropertyType.js";
+import { createRecordPropertyType } from "./createRecordPropertyType.js";
+import { createUnknownPropertyType } from "./createUnknownPropertyType.js";
+import { getObjectProperties } from "./getObjectProperties.js";
+import { hasNotes } from "./hasNotes.js";
+import { isForeignKey } from "./isForeignKey.js";
+import { isPrimaryKey } from "./isPrimaryKey.js";
 
 export function parseProperties(
   _schema: z4.$ZodType,

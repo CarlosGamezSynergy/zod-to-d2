@@ -1,5 +1,5 @@
-import { mkdir } from "fs/promises";
-import { dirname } from "path";
+import { mkdir } from "node:fs/promises";
+import { dirname } from "node:path";
 
 /**
  * Ensures that the directory for a given file path exists, creating it if necessary.

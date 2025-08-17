@@ -3,14 +3,14 @@
 import { program } from "commander";
 import process from "node:process";
 import path from "path";
-import type { ZodToD2Config } from "../types";
-import { ensureDirectoryExists } from "../utils";
-import { zodToD2 } from "./zodToD2";
+import type { ZodToD2Config } from "../types/ZodToD2Config.type.js";
+import { ensureDirectoryExists } from "../utils/ensureDirectoryExists.js";
+import { zodToD2 } from "./zodToD2.js";
 
 program
   .name("zod-to-d2")
   .description("CLI tool to convert Zod schemas to D2 diagrams")
-  .version("0.0.1");
+  .version("0.0.7");
 
 program
   .option(

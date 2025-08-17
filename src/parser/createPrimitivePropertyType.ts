@@ -1,10 +1,10 @@
-import { PropertyType, PropertyTypeName } from "../types/Property.type";
-
+import type { PropertyType, PropertyTypeName } from "../types/Property.type.js";
 
 export function createPrimitivePropertyType<T extends PropertyType>(
   name: string,
   propertyType: Extract<
-    PropertyTypeName, 'string' | 'boolean' | 'number' | 'datetime' | 'date' | 'bigint'
+    PropertyTypeName,
+    "string" | "boolean" | "number" | "datetime" | "date" | "bigint"
   >,
   isOptional = false,
   isNullable = false,

@@ -1,5 +1,5 @@
 import { $ZodType } from "zod/v4/core";
-import { ZodForeignKeyDef } from "../types/ZodForeignKeyDef";
+import { ZodForeignKeyDef } from "../types/ZodForeignKeyDef.js";
 
 export function getForeignKeyFromMeta<T extends $ZodType & { meta: () => any }>(
   schema: T

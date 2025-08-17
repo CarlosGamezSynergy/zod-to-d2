@@ -1,27 +1,38 @@
 import { bundleRequire } from "bundle-require";
 import z3 from "zod/v3";
 import * as z4 from "zod/v4/core";
-import { LoadedZodSchema } from "../types/LoadedZodSchema.type";
+import { type LoadedZodSchema } from "../types/LoadedZodSchema.type.js";
 
-export async function loadZodSchemas(filePath: string): Promise<LoadedZodSchema[]> {
+export async function loadZodSchemas(
+  filePath: string
+): Promise<LoadedZodSchema[]> {
+  try {
+    const br = await bundleRequire({
+      filepath: filePath,
+      format: "esm",
+    });
 
-    try {
-        const br = await bundleRequire({
-            filepath: filePath,
-        });
-
-        return Object.entries(br.mod).filter(([_key, schema]) => schema instanceof z4.$ZodType || schema instanceof z3.ZodType).map(([key, schema]) => ({
+    return Object.entries(br.mod)
+      .filter(
+        ([_key, schema]) =>
+          schema instanceof z4.$ZodType || schema instanceof z3.ZodType
+      )
+      .map(
+        ([key, schema]) =>
+          ({
             type: "LoadedZodSchemaSuccess",
             key,
-            schema
-        }) as LoadedZodSchema);
-
-    } catch (error) {
-        return [{
-            type: "LoadedZodSchemaError",
-            errorMessage: `Failed to load Zod schemas from file: ${filePath}`,
-            error: error instanceof Error ? error : new Error(String(error)),
-            filePath
-        } as LoadedZodSchema];
-    }
+            schema,
+          } as LoadedZodSchema)
+      );
+  } catch (error) {
+    return [
+      {
+        type: "LoadedZodSchemaError",
+        errorMessage: `Failed to load Zod schemas from file: ${filePath}`,
+        error: error instanceof Error ? error : new Error(String(error)),
+        filePath,
+      } as LoadedZodSchema,
+    ];
+  }
 }

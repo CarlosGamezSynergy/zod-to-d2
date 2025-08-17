@@ -1,8 +1,9 @@
 import * as z4 from "zod/v4/core";
-import { parseProperties, parseRelationships } from "../parser";
-import { buildDiagram } from "./buildDiagram";
-import { buildRelationship } from "./buildRelationship";
-import { buildTable } from "./buildTable";
+import { parseProperties } from "../parser/parseProperties.js";
+import { parseRelationships } from "../parser/parseRelationships.js";
+import { buildDiagram } from "./buildDiagram.js";
+import { buildRelationship } from "./buildRelationship.js";
+import { buildTable } from "./buildTable.js";
 
 export function generateDiagramText(
   title: string,

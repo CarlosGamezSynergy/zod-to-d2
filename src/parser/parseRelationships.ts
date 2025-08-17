@@ -1,45 +1,55 @@
 import * as z4 from "zod/v4/core";
-import { PropertyRelationship } from "../types/PropertyRelationship.type";
-import { ZodForeignKeyDef } from "../types/ZodForeignKeyDef";
-import { getObjectProperties } from "./getObjectProperties";
-import { isForeignKey } from "./isForeignKey";
+import { type PropertyRelationship } from "../types/PropertyRelationship.type.js";
+import { ZodForeignKeyDef } from "../types/ZodForeignKeyDef.js";
+import { getObjectProperties } from "./getObjectProperties.js";
+import { isForeignKey } from "./isForeignKey.js";
 
-export function parseRelationships(_schema: z4.$ZodType, propertyName: string = 'root'): PropertyRelationship[] {
-    const relationships = new Array<PropertyRelationship>();
-    const schema = _schema as z4.$ZodTypes;
-    const def = schema._zod.def;
-    const isForeign = isForeignKey(schema);
+export function parseRelationships(
+  _schema: z4.$ZodType,
+  propertyName: string = "root"
+): PropertyRelationship[] {
+  const relationships = new Array<PropertyRelationship>();
+  const schema = _schema as z4.$ZodTypes;
+  const def = schema._zod.def;
+  const isForeign = isForeignKey(schema);
 
-    switch (def.type) {
-        case "object": {
-            let tableName = "unknown_table";
+  switch (def.type) {
+    case "object": {
+      let tableName = "unknown_table";
 
-            if (propertyName !== 'root') {
-                tableName = z4.globalRegistry.get(schema)?.tableName as string;
-                if (!tableName) {
-                    tableName = propertyName;
-                }
-            }
-
-            const objectProperties = getObjectProperties(schema as z4.$ZodObject);
-            relationships.push(...objectProperties.flatMap((prop) => parseRelationships(prop[1], `${tableName}.${prop[0]}`)));
-            break;
+      if (propertyName !== "root") {
+        tableName = z4.globalRegistry.get(schema)?.tableName as string;
+        if (!tableName) {
+          tableName = propertyName;
         }
+      }
 
-        default: {
-            if (isForeign) {
-                const foreignKey = z4.globalRegistry.get(schema)?.foreignKey as ZodForeignKeyDef;
-                const foreignEntity = z4.globalRegistry.get(foreignKey.foreignSchema)?.tableName;
-
-                relationships.push({
-                    localProperty: propertyName,
-                    foreignEntity: foreignEntity || "unknown_table",
-                    foreignEntityProperty: foreignKey.foreignProperty,
-                } as PropertyRelationship);
-            }
-            break;
-        }
+      const objectProperties = getObjectProperties(schema as z4.$ZodObject);
+      relationships.push(
+        ...objectProperties.flatMap((prop) =>
+          parseRelationships(prop[1], `${tableName}.${prop[0]}`)
+        )
+      );
+      break;
     }
 
-    return relationships;
+    default: {
+      if (isForeign) {
+        const foreignKey = z4.globalRegistry.get(schema)
+          ?.foreignKey as ZodForeignKeyDef;
+        const foreignEntity = z4.globalRegistry.get(
+          foreignKey.foreignSchema
+        )?.tableName;
+
+        relationships.push({
+          localProperty: propertyName,
+          foreignEntity: foreignEntity || "unknown_table",
+          foreignEntityProperty: foreignKey.foreignProperty,
+        } as PropertyRelationship);
+      }
+      break;
+    }
+  }
+
+  return relationships;
 }

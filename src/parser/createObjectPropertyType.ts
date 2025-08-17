@@ -1,5 +1,4 @@
-import { PropertyType } from "../types/Property.type";
-
+import { type PropertyType } from "../types/Property.type.js";
 
 export function createObjectPropertyType(
   name: string,
@@ -12,7 +11,7 @@ export function createObjectPropertyType(
 ): PropertyType {
   return {
     name,
-    type: 'object',
+    type: "object",
     properties,
     isOptional,
     isNullable,

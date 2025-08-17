@@ -1,5 +1,4 @@
-import { PropertyType } from "../types/Property.type";
-
+import { type PropertyType } from "../types/Property.type.js";
 
 export function createLiteralPropertyType(
   name: string,
@@ -12,7 +11,7 @@ export function createLiteralPropertyType(
 ): PropertyType {
   return {
     name,
-    type: 'literal',
+    type: "literal",
     value,
     isOptional,
     isNullable,

@@ -1,5 +1,5 @@
-import { PropertyRelationship } from "../types/PropertyRelationship.type";
-import { buildTextFile } from "./buildTextFile";
+import { type PropertyRelationship } from "../types/PropertyRelationship.type.js";
+import { buildTextFile } from "./buildTextFile.js";
 
 export function buildRelationship(relationship: PropertyRelationship) {
     const { localProperty, foreignEntity, foreignEntityProperty } = relationship;

@@ -1,5 +1,4 @@
-import { PropertyType } from "../types/Property.type";
-
+import { type PropertyType } from "../types/Property.type.js";
 
 export function createUnionPropertyType(
   name: string,
@@ -12,7 +11,7 @@ export function createUnionPropertyType(
 ): PropertyType {
   return {
     name,
-    type: 'union',
+    type: "union",
     unionProps: properties,
     isOptional,
     isNullable,

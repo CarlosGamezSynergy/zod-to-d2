@@ -1,5 +1,4 @@
-import { PropertyType } from "../types/Property.type";
-
+import { type PropertyType } from "../types/Property.type.js";
 
 export function createRecordPropertyType(
   name: string,
@@ -13,7 +12,7 @@ export function createRecordPropertyType(
 ): PropertyType {
   return {
     name,
-    type: 'record',
+    type: "record",
     keyType,
     valueType,
     isOptional,

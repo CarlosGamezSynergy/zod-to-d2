@@ -1,6 +1,6 @@
 import * as z4 from "zod/v4/core";
 
-z4.$ZodType.prototype.notes = function notes<T extends z4.$ZodType>(this: T, ...notes: string[]): T {
+export function notes<T extends z4.$ZodType>(this: T, ...notes: string[]): T {
 
     const currentMetadata = z4.globalRegistry.get(this);
 

@@ -1,5 +1,4 @@
-import { PropertyType } from "../types/Property.type";
-
+import { type PropertyType } from "../types/Property.type.js";
 
 export function createEnumPropertyType(
   name: string,
@@ -12,7 +11,7 @@ export function createEnumPropertyType(
 ): PropertyType {
   return {
     name,
-    type: 'enum',
+    type: "enum",
     values,
     isOptional,
     isNullable,
